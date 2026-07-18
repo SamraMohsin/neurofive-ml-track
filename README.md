@@ -1,82 +1,81 @@
-# Titanic Dataset - Exploratory Data Analysis
+# Titanic Survival Analysis - Machine Learning Project
 
 **Author:** Samra Mohsin  
 **Role:** Machine Learning Intern  
-**Project:** First EDA Assignment for Neurofive ML Track
+**Organization:** Neurofive Solutions  
 
 ---
 
 ## Project Overview
 
-This project is my first Exploratory Data Analysis (EDA) assignment as a Machine Learning Intern. I analyzed the Titanic passenger dataset using Python and pandas to understand data structure, identify missing values, and distinguish between numerical and categorical features. This foundational work is essential before building any machine learning model.
+This project is part of my Machine Learning Internship at Neurofive Solutions. I analyzed the famous Titanic dataset to understand survival patterns, clean messy data, and create meaningful visualizations. This is the foundation for building predictive models.
+
+The project is divided into two main tasks:
+
+| Task | Topic | Status |
+|------|-------|--------|
+| Task 1 | Exploratory Data Analysis (EDA) | ✅ Complete |
+| Task 2 | Data Cleaning and Visualization | ✅ Complete |
 
 ---
 
-## Dataset Information
+## Task 1: Exploratory Data Analysis (EDA)
 
-- **Source:** Kaggle Titanic Competition
-- **Samples:** 891 passenger records
-- **Features:** 12 columns
-- **Target Variable:** Survived (0 = Did not survive, 1 = Survived)
-- **Survival Rate:** 38.38%
+### Objective
+To understand the Titanic dataset structure, identify data quality issues, and discover initial patterns.
 
-### Features Description
+### Steps Performed
 
-| Feature | Type | Description |
-|---------|------|-------------|
-| PassengerId | int64 | Unique passenger identifier |
-| Survived | int64 | Target variable (0/1) |
-| Pclass | int64 | Ticket class (1st, 2nd, 3rd) |
-| Name | string | Passenger name |
-| Sex | string | Gender |
-| Age | float64 | Age in years |
-| SibSp | int64 | Siblings/Spouses aboard |
-| Parch | int64 | Parents/Children aboard |
-| Ticket | string | Ticket number |
-| Fare | float64 | Fare paid |
-| Cabin | string | Cabin number |
-| Embarked | string | Port of embarkation (C= Cherbourg, Q= Queenstown, S= Southampton) |
+1. **Data Loading**
+   - Used pandas to load the Titanic dataset
+   - Examined the first 5 rows using `df.head()`
 
----
+2. **Data Exploration**
+   - Checked data types with `df.info()`
+   - Generated statistical summary with `df.describe()`
+   - Found dataset shape: 891 rows, 12 columns
 
-## Key Findings
+3. **Missing Values Analysis**
+   - **Age:** 177 missing values (19.9% of data)
+   - **Cabin:** 687 missing values (77.1% of data)
+   - **Embarked:** 2 missing values (0.2% of data)
 
-### Missing Values Analysis
-- **Age:** 177 missing values (19.9%) - Requires imputation
-- **Cabin:** 687 missing values (77.1%) - Consider dropping or feature engineering
-- **Embarked:** 2 missing values (0.2%) - Easy to impute with mode
+4. **Feature Identification**
+   - **Numerical columns:** PassengerId, Survived, Pclass, Age, SibSp, Parch, Fare
+   - **Categorical columns:** Name, Sex, Ticket, Cabin, Embarked
 
-### Feature Types
-- **Numerical Features:** Age, Fare, SibSp, Parch, PassengerId, Pclass
-- **Categorical Features:** Name, Sex, Ticket, Cabin, Embarked
-- **Note:** Survived is numerical but serves as a categorical target variable
+### Key Findings
+- **Survival Rate:** 38.38% (342 survived, 549 did not)
+- Most passengers were between 20-40 years old
+- Gender and ticket class appear to be important survival factors
+
+### Notebook
+`titanic_eda.ipynb`
 
 ---
 
-## Technical Implementation
+## Task 2: Data Cleaning and Visualization
 
-### Tools & Technologies
-- Python 3.x
-- pandas for data manipulation
-- Jupyter Notebook (VS Code)
-- Git & GitHub for version control
+### Objective
+To clean the data properly and tell its story through visualizations before building machine learning models.
 
-### Key Code Snippets
+### 1. Handling Missing Values
 
+**My Approach:**
+
+| Column | Missing Values | Method Used | Justification |
+|--------|---------------|-------------|---------------|
+| Cabin | 687 (77%) | Dropped | Too many missing values to fill reliably |
+| Age | 177 (19.9%) | Filled with median | Median is robust against outliers |
+| Embarked | 2 (0.2%) | Filled with mode | Only 2 missing, use most common value |
+
+**Code Implementation:**
 ```python
-import pandas as pd
+# Drop Cabin column
+df_clean = df.drop('Cabin', axis=1)
 
-# Load dataset
-df = pd.read_csv('Titanic-Dataset.csv')
+# Fill Age with median
+df_clean['Age'] = df_clean['Age'].fillna(df_clean['Age'].median())
 
-# Explore data
-df.head()
-df.info()
-df.describe()
-
-# Check missing values
-df.isnull().sum()
-
-# Identify feature types
-numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
-categorical_cols = df.select_dtypes(include=['object', 'string']).columns.tolist()
+# Fill Embarked with mode
+df_clean['Embarked'] = df_clean['Embarked'].fillna(df_clean['Embarked'].mode()[0])
